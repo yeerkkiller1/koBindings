@@ -52,11 +52,6 @@ ko.extenders.numeric = function(target, precision) {
             //only write if it changed
             if (valueToWrite !== current) {
                 target(valueToWrite);
-            } else {
-                //if the rounded value is the same, but a different value was written, force a notification for the current field
-                if (newValue !== current) {
-                    target.notifySubscribers(valueToWrite);
-                }
             }
         }
     }).extend({ notify: 'always' });
