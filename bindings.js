@@ -50,6 +50,9 @@ ko.bindingHandlers.persistObserv = {
         persistObserv(observ, key);
     }
 }
+ko.extenders.persist = function(target, option) {
+    persistObserv(target, option);
+};
 
 function persistObserv(observ, key) {
     //TODO: Make sure we don't persist and observable multiple times, as that could
