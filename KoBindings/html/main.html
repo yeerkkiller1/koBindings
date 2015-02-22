@@ -1,0 +1,23 @@
+﻿<div id="holder">
+
+</div>
+
+<div id="clientLoaded" data-bind="KOWidget: { url: './widgets/HTMLViewer.html', model: $data }" data-wipeOutHTML="true">wipe out this data</div>
+
+<div id="serverLoaded" data-bind="KOWidget: { htmlPresent: true, model: $data }">
+    HTML Viewer <span data-bind="text: time"></span>
+</div>
+
+<div id="jsLoaded" data-bind="StopBinding: true">
+    HTML Viewer <span data-bind="text: time"></span>
+</div>
+<div id="jsLoaded2" data-bind="StopBinding: true"></div>
+
+<div id="withAType" data-bind="KOWidget: { type: 'KoBindings/HTMLViewer/HTMLViewer', model: $data }"></div>
+
+<div id="withATypeServerLoaded" data-bind="KOWidget: { type: 'KoBindings/HTMLViewer/HTMLViewer', model: $data }">
+    HTML Viewer <span data-bind="text: time"></span>
+</div>
+
+
+<script src="https://rawgit.com/yeerkkiller1/require/master/require.js" data-main="../js/KoBindings/Boot.js"></script>

@@ -1,0 +1,10 @@
+C:\Repos\koBindings\KoBindings\KoBindings\bin\KoBindings.dll
+C:\Repos\koBindings\KoBindings\KoBindings\bin\KoBindings.pdb
+C:\Repos\koBindings\KoBindings\KoBindings\obj\Debug\KoBindings.csprojResolveAssemblyReference.cache
+C:\Repos\koBindings\KoBindings\KoBindings\obj\Debug\KoBindings.dll
+C:\Repos\koBindings\KoBindings\KoBindings\obj\Debug\KoBindings.pdb
+C:\Repos\koBindings\KoBindings\bin\KoBindings.dll
+C:\Repos\koBindings\KoBindings\bin\KoBindings.pdb
+C:\Repos\koBindings\KoBindings\obj\Debug\KoBindings.csprojResolveAssemblyReference.cache
+C:\Repos\koBindings\KoBindings\obj\Debug\KoBindings.dll
+C:\Repos\koBindings\KoBindings\obj\Debug\KoBindings.pdb

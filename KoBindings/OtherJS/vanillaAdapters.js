@@ -12,17 +12,3 @@ function forceObservable(obj, propName) {
     watchProperty(obj, propName, observ);
     obj[observName] = observ;
 }
-
-function watchProperty(obj, propName, callback) {
-    var _privateValue = obj[propName];
-
-    Object.defineProperty(obj, propName, {
-        get: function(){
-            return _privateValue;
-        },
-        set: function(val){
-            _privateValue = val;
-            callback(obj[propName]);
-        }
-    });
-}
