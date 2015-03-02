@@ -13,5 +13,6 @@
   </metadata>
   <files>
     <file src="js\" target="content\js\" />
+    <file src="libs\" target="content\libs\" />
   </files>
 </package>

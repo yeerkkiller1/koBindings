@@ -1,8 +1,11 @@
-﻿import ko = require("knockout");
+﻿/// <reference path="../../libs/knockout.d.ts"/>
+/// <reference path="../../libs/require.d.ts"/>
+
+import ko = require("knockout");
 
 import AjaxLoaders = require("KoBindings/Ajax/AjaxLoaders");
 
-function loadKOTemplate(urlSource,  callback) {
+function loadKOTemplate(urlSource: string, callback: () => void) {
     if (document.querySelector("script[id='" + urlSource + "']")) {
         callback();
         return;
@@ -14,6 +17,21 @@ function loadKOTemplate(urlSource,  callback) {
         script.text = responseText;
         document.head.appendChild(script);
         callback();
+    });
+}
+
+function loadCSS(urlSource: string, callback?: () => void) {
+    if (document.querySelector("link[href='" + urlSource + "']")) {
+        if (callback) callback();
+        return;
+    }
+    AjaxLoaders.cachedAjaxRequest(urlSource, function (responseText) {
+        var css = document.createElement("link");
+        css.href = urlSource;
+        css.rel = "stylesheet";
+        css.type = "text/css";
+        document.head.appendChild(css);
+        if (callback) callback();
     });
 }
 
@@ -41,9 +59,12 @@ class KOWidget<T> {
 
     constructor(
         public model: T,
-        private element: HTMLElement,
-        private url?: string
+        public element: HTMLElement,
+        private url?: string,
+        private cssUrl?: string
     ) {
+        for (var key in KOWidget.prototype) this[key] = this[key].bind(this);
+
         this.koBindingData = { allBindings: [], viewModel: model, bindingContext: new (<any>ko).bindingContext() };
 
         this.templateLoaded = !!url;
@@ -56,7 +77,12 @@ class KOWidget<T> {
             console.warn("When loading widget the HTML was marked as present and there was a url. The url will be ignored for element", element);
         }
 
+        if (!url && cssUrl) {
+            throw new Error("You cannot load the css dynamically without loading the html dynamically (if you pass cssUrl, you MUST also pass a URL)");
+        }
+
         if (!templateLoaded) {
+            //Just for debugging, not the url is not related to id.
             this.url = this.id;
         }
 
@@ -69,6 +95,8 @@ class KOWidget<T> {
 
         KOWidgetStore[this.id] = this;
         element.setAttribute("KOWidgetId", this.id);
+
+        this.beforeBind();
 
         this.init();
     }
@@ -84,8 +112,12 @@ class KOWidget<T> {
         return KOWidgetStore[id];
     }
 
-    public init() {
+    private init() {
         console.log("Created KOWidget " + this.url);
+
+        if ((<any>this.model).subscribe) {
+            (<any>this.model).subscribe(this.update);
+        }
 
         if (!this.templateLoaded) {
             this.loaded = true;
@@ -100,7 +132,11 @@ class KOWidget<T> {
                     ko.applyBindings(this.model, childNode);
                 }
             }
+            this.afterBind();
         } else {
+            if (this.cssUrl) {
+                loadCSS(this.cssUrl);
+            }
             loadKOTemplate(this.url,() => {
                 this.loaded = true;
                 var allBindings = this.koBindingData.allBindings;
@@ -109,10 +145,11 @@ class KOWidget<T> {
 
                 ko.bindingHandlers.template.init(this.element, this.bindingDataAccessor, allBindings, viewModel, bindingContext);
                 this.update();
+                this.afterBind();
             });
         }
     }
-    public update() {
+    private update() {
         if (!this.loaded) return;
 
         if (!this.templateLoaded) return;
@@ -127,6 +164,9 @@ class KOWidget<T> {
             ko.bindingHandlers.template.update(this.element, this.bindingDataAccessor, allBindings, viewModel, bindingContext);
         }
     }
+
+    public beforeBind() { }
+    public afterBind() { }
 }
 
 ko.bindingHandlers['KOWidget'] = {
@@ -142,6 +182,9 @@ ko.bindingHandlers['KOWidget'] = {
             new KOWidget(model, element, url);
         } else {
             require([data.type], function (WidgetType) {
+                if (data.class) {
+                    WidgetType = WidgetType[data.class];
+                }
                 new WidgetType(model, element, url);
             });
         }
@@ -151,7 +194,7 @@ ko.bindingHandlers['KOWidget'] = {
     update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
         var widget = KOWidget.getWidgetForElement(element);
         if (widget) {
-            widget.update();
+            (<any>widget).update();
         }
     }
 };

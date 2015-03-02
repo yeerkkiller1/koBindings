@@ -1,3 +1,6 @@
+/// <reference path="../../libs/knockout.d.ts"/>
+import ko = require("knockout");
+
 function toggle(observ, values) {
   var index = values.indexOf(observ());
   index = (index + 1) % values.length;
@@ -5,7 +8,7 @@ function toggle(observ, values) {
 }
 
 //{observ: observ, values: []}
-ko.bindingHandlers.clickToggle = {
+ko.bindingHandlers["clickToggle"] = {
   init: function(element, valueAccessor) {
     element.onclick = function() {
       var obj = valueAccessor();
@@ -13,7 +16,7 @@ ko.bindingHandlers.clickToggle = {
     }
   }
 };
-ko.bindingHandlers.hoverBind = {
+ko.bindingHandlers["hoverBind"] = {
   init: function(element, valueAccessor) {
     var observ = valueAccessor();
     element.onmouseover = function() {
@@ -24,7 +27,7 @@ ko.bindingHandlers.hoverBind = {
     }
   }
 };
-ko.bindingHandlers.visibleWithClass = {
+ko.bindingHandlers["visibleWithClass"] = {
   init: function(element, valueAccessor) {
     ko.computed(function() {
       var visible = ko.utils.unwrapObservable(valueAccessor());
@@ -39,14 +42,14 @@ ko.bindingHandlers.visibleWithClass = {
   }
 };
 
-ko.extenders.numeric = function(target, precision) {
+ko.extenders["numeric"] = function(target, precision) {
     //create a writable computed observable to intercept writes to our observable
     var result = ko.pureComputed({
         read: target,  //always return the original observables value
-        write: function(newValue) {
+        write: function(newValue: any) {
             var current = target(),
                 roundingMultiplier = Math.pow(10, precision),
-                newValueAsNum = isNaN(newValue) ? 0 : parseFloat(+newValue),
+                newValueAsNum = isNaN(newValue) ? 0 : parseFloat(<any>(+newValue)),
                 valueToWrite = Math.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
  
             //only write if it changed
@@ -66,7 +69,7 @@ ko.extenders.numeric = function(target, precision) {
 //Takes {observ, key}.
 //Persists the observ, and shares the backing storage with everything that has the same key,
 //  so if an observable with the same key changes, our obserable also changes (and the persisted value changes).
-ko.bindingHandlers.persistObserv = {
+ko.bindingHandlers["persistObserv"] = {
     init: function(_, valueAccessor) {
         var obj = valueAccessor();
         var observ = obj.observ;
@@ -75,15 +78,15 @@ ko.bindingHandlers.persistObserv = {
         persistObserv(observ, key);
     }
 }
-ko.extenders.persist = function(target, option) {
+ko.extenders["persist"] = function(target, option) {
     persistObserv(target, option);
 };
 
-function persistObserv(observ, key) {
+export function persistObserv(observ, key) {
     //TODO: Make sure we don't persist and observable multiple times, as that could
     //  cause massive performance issues.
 
-    var globalObservs = window.globalObservs = window.globalObservs || {};
+    var globalObservs = window["globalObservs"] = window["globalObservs"] || {};
     
     //Sync with the globalObservs
     var globalObserv;

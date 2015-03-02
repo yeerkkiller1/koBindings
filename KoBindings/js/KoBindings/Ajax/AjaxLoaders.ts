@@ -1,4 +1,4 @@
-﻿export function rawAjaxRequest(url, callback) {
+﻿export function rawAjaxRequest(url: string, callback: (result: string) => void) {
     var HTTPReq = new XMLHttpRequest();
     HTTPReq.onreadystatechange = function () {
         if (HTTPReq.readyState != 4) return;
@@ -12,30 +12,24 @@
     HTTPReq.send();
 }
 
-var loadingUrls: { [url: string]: { loaded: boolean; callbacks: Array<(responseText: string) => void> } } = {};
-export function cachedAjaxRequest(urlSource, callback) {
+var loadingUrls: { [url: string]: { loaded: boolean; result: string; callbacks: Array<(responseText: string) => void> } } = {};
+export function cachedAjaxRequest(urlSource: string, callback: (result: string) => void) {
     if (loadingUrls[urlSource]) {
         var urlData = loadingUrls[urlSource];
         if (urlData.loaded) {
-            callback();
+            callback(urlData.result);
         } else {
             urlData.callbacks.push(callback);
         }
         return;
     }
 
-    var urlData = { loaded: false, callbacks: <Array<(responseText: string) => void>>[callback] };
+    var urlData = { loaded: false, result: "", callbacks: <Array<(responseText: string) => void>>[callback] };
     loadingUrls[urlSource] = urlData;
-
-    var name = urlSource;
-    if (document.getElementById(name)) {
-        callback();
-        return;
-    }
-    //Huh... if we set type="text/html" it is not actually loading it? w/e... XMLHttpRequest works fine
 
     rawAjaxRequest(urlSource, function (responseText) {
         urlData.loaded = true;
+        urlData.result = responseText;
         urlData.callbacks.forEach(fn => fn(responseText));
     });
 }

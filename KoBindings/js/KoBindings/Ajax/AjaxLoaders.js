@@ -19,23 +19,18 @@ define(["require", "exports"], function (require, exports) {
         if (loadingUrls[urlSource]) {
             var urlData = loadingUrls[urlSource];
             if (urlData.loaded) {
-                callback();
+                callback(urlData.result);
             }
             else {
                 urlData.callbacks.push(callback);
             }
             return;
         }
-        var urlData = { loaded: false, callbacks: [callback] };
+        var urlData = { loaded: false, result: "", callbacks: [callback] };
         loadingUrls[urlSource] = urlData;
-        var name = urlSource;
-        if (document.getElementById(name)) {
-            callback();
-            return;
-        }
-        //Huh... if we set type="text/html" it is not actually loading it? w/e... XMLHttpRequest works fine
         rawAjaxRequest(urlSource, function (responseText) {
             urlData.loaded = true;
+            urlData.result = responseText;
             urlData.callbacks.forEach(function (fn) { return fn(responseText); });
         });
     }

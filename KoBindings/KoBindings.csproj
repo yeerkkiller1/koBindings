@@ -52,9 +52,9 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="html\main.html" />
+    <Content Include="html\KoBindingsMain.html" />
     <Content Include="html\widgets\HTMLViewer.html" />
-    <Content Include="OtherJS\bindings.js" />
+    <TypeScriptCompile Include="js\KoBindings\bindings.ts" />
     <Content Include="OtherJS\debugProperty.js" />
     <Content Include="OtherJS\remoteTemplate.js" />
     <Content Include="OtherJS\uizeAdapters.js" />
@@ -66,11 +66,10 @@
     <Content Include="js\KoBindings\Boot.js" />
     <TypeScriptCompile Include="js\KoBindings\Ajax\AjaxLoaders.ts" />
     <TypeScriptCompile Include="js\KoBindings\Ajax\StopBinding.ts" />
+    <TypeScriptCompile Include="js\KoBindings\Helpers\when.ts" />
     <TypeScriptCompile Include="js\KoBindings\HTMLViewer\HTMLViewer.ts" />
     <TypeScriptCompile Include="js\KoBindings\KOWidget.ts" />
     <TypeScriptCompile Include="js\KoBindings\Main.ts" />
-    <TypeScriptCompile Include="libs\require.d.ts" />
-    <TypeScriptCompile Include="libs\knockout.d.ts" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>amd</TypeScriptModuleKind>
