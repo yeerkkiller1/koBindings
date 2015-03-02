@@ -1,6 +1,7 @@
-﻿function when(msCheckDelay: number, callback: () => void, condition: () => boolean) {
-    if (condition()) {
-        callback();
+﻿function when<T>(msCheckDelay: number, callback: (data?: T) => void, condition: () => T) {
+    var val = condition()
+    if (val) {
+        callback(val);
         return;
     }
     setTimeout(function () {

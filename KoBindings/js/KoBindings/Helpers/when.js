@@ -1,7 +1,8 @@
 define(["require", "exports"], function (require, exports) {
     function when(msCheckDelay, callback, condition) {
-        if (condition()) {
-            callback();
+        var val = condition();
+        if (val) {
+            callback(val);
             return;
         }
         setTimeout(function () {
