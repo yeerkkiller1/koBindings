@@ -65,9 +65,9 @@ class KOWidget<T> {
     ) {
         for (var key in KOWidget.prototype) this[key] = this[key].bind(this);
 
-        var bindingContext = ko.contextFor(element);
+        var bindingContext = new (<any>ko).bindingContext(model);
 
-        this.koBindingData = { allBindings: [], viewModel: model, bindingContext: bindingContext || new (<any>ko).bindingContext() };
+        this.koBindingData = { allBindings: [], viewModel: model, bindingContext: bindingContext };
 
         this.templateLoaded = !!url;
         var templateLoaded = this.templateLoaded;

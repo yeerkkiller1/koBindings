@@ -47,8 +47,8 @@ define(["require", "exports", "knockout", "KoBindings/Ajax/AjaxLoaders"], functi
             this.id = KOWidgetGetNextId();
             for (var key in KOWidget.prototype)
                 this[key] = this[key].bind(this);
-            var bindingContext = ko.contextFor(element);
-            this.koBindingData = { allBindings: [], viewModel: model, bindingContext: bindingContext || new ko.bindingContext() };
+            var bindingContext = new ko.bindingContext(model);
+            this.koBindingData = { allBindings: [], viewModel: model, bindingContext: bindingContext };
             this.templateLoaded = !!url;
             var templateLoaded = this.templateLoaded;
             if (templateLoaded && element.innerHTML && !element.getAttribute("data-wipeOutHTML")) {
