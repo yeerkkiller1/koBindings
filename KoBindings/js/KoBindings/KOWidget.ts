@@ -45,7 +45,7 @@ class KOWidget<T> {
     private loaded = false;
     //Used for KO Binding
     private bindingDataAccessor;
-    private id = KOWidgetGetNextId();
+    public id = KOWidgetGetNextId();
 
     //True if we load our data from a url template (just !!this.url)
     private templateLoaded: boolean;
